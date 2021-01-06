@@ -1,16 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>ACGcodeQuiz</title>
 </head>
+
 <body>
-<p><button id="quiz">Start Quiz</button></p>
-<div id="quiz"></div>
-<p><button id="submit">Get Results</button></p>
-<div id="results"></div>
+
+    <a href="HighScores.html">View Highscores</a>
+
+    <div id="wrapper">
+
+        <div id="currentTime"></div>
+
+        <div id="questions">
+            <h1>Anthony Gannuscio</h1>
+            <h6>a quiz about me</h6>
+            <p>Try to answer the following questions within the time limit. Keep in mind that incorrect
+                answers
+                will penalize your score/time by ten seconds!</p>
+            <ul id="quiz"></ul>
+            
+            <button id="submit">Start Quiz</button>
+            <button id="submit">Get Results</button>
+            <div id="results"></div>
+        </div>
+
+    </div>
+
     <script src="script.js"></script>
-    </body>
+</body>
+
 </html>
