@@ -47,7 +47,7 @@ var myQuestions = [
     },
     correctAnswer: 'c'
   }
-  
+
 ];
 
 var quizContainer = document.getElementById('quiz');
@@ -56,28 +56,28 @@ var submitButton = document.getElementById('submit');
 
 generateQuiz(myQuestions, quizContainer, resultsContainer, submitButton);
 
-function generateQuiz(questions, quizContainer, resultsContainer, submitButton){
+function generateQuiz(questions, quizContainer, resultsContainer, submitButton, timer) {
 
-  function showQuestions(questions, quizContainer){
+  function showQuestions(questions, quizContainer) {
     // we'll need a place to store the output and the answer choices
     var output = [];
     var answers;
 
     // for each question...
-    for(var i=0; i<questions.length; i++){
-      
+    for (var i = 0; i < questions.length; i++) {
+
       // first reset the list of answers
       answers = [];
 
       // for each available answer...
-      for(letter in questions[i].answers){
+      for (letter in questions[i].answers) {
 
         // ...add an html radio button
         answers.push(
           '<label>'
-            + '<input type="radio" name="question'+i+'" value="'+letter+'">'
-            + letter + ': '
-            + questions[i].answers[letter]
+          + '<input type="radio" name="question' + i + '" value="' + letter + '">'
+          + letter + ': '
+          + questions[i].answers[letter]
           + '</label>'
         );
       }
@@ -94,31 +94,31 @@ function generateQuiz(questions, quizContainer, resultsContainer, submitButton){
   }
 
 
-  function showResults(questions, quizContainer, resultsContainer){
-    
+  function showResults(questions, quizContainer, resultsContainer) {
+
     // gather answer containers from our quiz
     var answerContainers = quizContainer.querySelectorAll('.answers');
-    
+
     // keep track of user's answers
     var userAnswer = '';
     var numCorrect = 0;
-    
+
     // for each question...
-    for(var i=0; i<questions.length; i++){
+    for (var i = 0; i < questions.length; i++) {
 
       // find selected answer
-      userAnswer = (answerContainers[i].querySelector('input[name=question'+i+']:checked')||{}).value;
-      
+      userAnswer = (answerContainers[i].querySelector('input[name=question' + i + ']:checked') || {}).value;
+
       // if answer is correct
-      if(userAnswer===questions[i].correctAnswer){
+      if (userAnswer === questions[i].correctAnswer) {
         // add to the number of correct answers
         numCorrect++;
-        
+
         // color the answers green
         answerContainers[i].style.color = 'lightgreen';
       }
       // if answer is wrong or blank
-      else{
+      else {
         // color the answers red
         answerContainers[i].style.color = 'red';
       }
@@ -130,10 +130,33 @@ function generateQuiz(questions, quizContainer, resultsContainer, submitButton){
 
   // show questions right away
   showQuestions(questions, quizContainer);
-  
+
   // on submit, show results
-  submitButton.onclick = function(){
+  submitButton.onclick = function () {
     showResults(questions, quizContainer, resultsContainer);
+  }
+  document.getElementById('timer').innerHTML =
+    003 + ":" + 20;
+  startTimer();
+
+  function startTimer() {
+    var presentTime = document.getElementById('timer').innerHTML;
+    var timeArray = presentTime.split(/[:]+/);
+    var m = timeArray[0];
+    var s = checkSecond((timeArray[1] - 1));
+    if (s == 59) { m = m - 1 }
+    //if(m<0){alert('timer completed')}
+
+    document.getElementById('timer').innerHTML =
+      m + ":" + s;
+    console.log(m)
+    setTimeout(startTimer, 1000);
+  }
+
+  function checkSecond(sec) {
+    if (sec < 10 && sec >= 0) { sec = "0" + sec }; // add zero in front of numbers < 10
+    if (sec < 0) { sec = "59" };
+    return sec;
   }
 
 }
