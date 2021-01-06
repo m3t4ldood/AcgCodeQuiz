@@ -1,5 +1,3 @@
 # code-quiz
 <h1> by anthony gannuscio </h1>
-<ol>
-  <li>hi</li>
-</ol>
+https://m3t4ldood.github.io/ACGcodeQuiz
