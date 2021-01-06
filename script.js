@@ -1,22 +1,53 @@
 var myQuestions = [
   {
-    question: "what color is this?",
+    question: "Who is my all time favorite band?",
     answers: {
-      a: 'red',
-      b: 'blue',
-      c: 'green'
+      a: 'The Who',
+      b: 'Creed',
+      c: 'KoRn',
+      d: 'Slipknot'
+    },
+    correctAnswer: 'c'
+  },
+  {
+    question: "What is my all time favorite cartoon?",
+    answers: {
+      a: 'Family Guy',
+      b: 'South Park',
+      c: 'Bobs burgers',
+      d: 'The Simpsons'
     },
     correctAnswer: 'b'
   },
   {
-    question: "What is 30/3?",
+    question: "Where was I born?(multiple answers)",
     answers: {
-      a: '3',
-      b: '5',
-      c: '10'
+      a: 'Flint, Michigan',
+      b: 'in a hospital',
+      c: 'Phoenix Az',
+      d: 'in a dumpster'
+    },
+    correctAnswer: 'b', 'c'
+  },
+  {
+    question: "When did I move to Seattle, WA?",
+    answers: {
+      a: 'January 1st 2021',
+      b: 'August 19th 2013',
+      c: 'December 16th 2013'
+    },
+    correctAnswer: 'b'
+  },
+  {
+    question: "Why didn't I finish my assignment on time?",
+    answers: {
+      a: 'My Cat Deleted the Files',
+      b: 'I was dead at the time',
+      c: 'Poor Time Management'
     },
     correctAnswer: 'c'
   }
+  
 ];
 
 var quizContainer = document.getElementById('quiz');
@@ -105,4 +136,4 @@ function generateQuiz(questions, quizContainer, resultsContainer, submitButton){
     showResults(questions, quizContainer, resultsContainer);
   }
 
-});
+}
