@@ -15,21 +15,30 @@
     <div id="wrapper">
 
         <div id="currentTime"></div>
-
-        <div id="questions">
-            <div><span id="timer"></span></div>
+        <div><span id="timer"></span></div>
+        <div id= "startScreen">
             <h1>Anthony Gannuscio</h1>
             <h6>a quiz about me</h6>
             <p>Try to answer the following questions within the time limit. Keep in mind that incorrect
                 answers
                 will penalize your score/time by ten seconds!</p>
-            <ul id="quiz"></ul>
+                <button id="submit">Start Quiz</button>
             
-            <button id="submit">Start Quiz</button>
-            <button id="submit">Get Results</button>
-            <div id="results"></div>
         </div>
-
+        <div id="questions"class="hidden">
+            <h3 id="question"></h3>
+            <ul id="choices"></ul>
+            
+            
+        </div>
+        <div id="endscreen"class="hidden">
+            <h1>game over</h1>
+            <div id="results"></div>
+            <p>enter initials: 
+                <input id="initials" type="text"/>
+                <button id="submitInit">submit</button>
+            </p>
+        </div>
     </div>
 
     <script src="script.js"></script>

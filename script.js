@@ -27,7 +27,7 @@ var myQuestions = [
       c: 'Phoenix Az',
       d: 'in a dumpster'
     },
-    correctAnswer: 'b', 'c'
+    correctAnswer: 'b',
   },
   {
     question: "When did I move to Seattle, WA?",
@@ -50,113 +50,116 @@ var myQuestions = [
 
 ];
 
-var quizContainer = document.getElementById('quiz');
+//var quizContainer = document.getElementById('quiz');
 var resultsContainer = document.getElementById('results');
 var submitButton = document.getElementById('submit');
+var time=60;
+var timer;
+var currentQ=0;
+// generateQuiz(myQuestions, quizContainer, resultsContainer, submitButton);
 
-generateQuiz(myQuestions, quizContainer, resultsContainer, submitButton);
+function generateQuiz() {
 
-function generateQuiz(questions, quizContainer, resultsContainer, submitButton, timer) {
+  // function showQuestions(questions, quizContainer) {
+  //   // we'll need a place to store the output and the answer choices
+  //   var output = [];
+  //   var answers;
 
-  function showQuestions(questions, quizContainer) {
-    // we'll need a place to store the output and the answer choices
-    var output = [];
-    var answers;
+  //   // for each question...
+  //   for (var i = 0; i < questions.length; i++) {
 
-    // for each question...
-    for (var i = 0; i < questions.length; i++) {
+  //     // first reset the list of answers
+  //     answers = [];
 
-      // first reset the list of answers
-      answers = [];
+  //     // for each available answer...
+  //     for (letter in questions[i].answers) {
 
-      // for each available answer...
-      for (letter in questions[i].answers) {
+  //       // ...add an html radio button
+  //       answers.push(
+  //         '<label>'
+  //         + '<input type="radio" name="question' + i + '" value="' + letter + '">'
+  //         + letter + ': '
+  //         + questions[i].answers[letter]
+  //         + '</label>'
+  //       );
+  //     }
 
-        // ...add an html radio button
-        answers.push(
-          '<label>'
-          + '<input type="radio" name="question' + i + '" value="' + letter + '">'
-          + letter + ': '
-          + questions[i].answers[letter]
-          + '</label>'
-        );
-      }
-
-      // add this question and its answers to the output
-      output.push(
-        '<div class="question">' + questions[i].question + '</div>'
-        + '<div class="answers">' + answers.join('') + '</div>'
-      );
-    }
-
-    // finally combine our output list into one string of html and put it on the page
-    quizContainer.innerHTML = output.join('');
-  }
-
-
-  function showResults(questions, quizContainer, resultsContainer) {
-
-    // gather answer containers from our quiz
-    var answerContainers = quizContainer.querySelectorAll('.answers');
-
-    // keep track of user's answers
-    var userAnswer = '';
-    var numCorrect = 0;
-
-    // for each question...
-    for (var i = 0; i < questions.length; i++) {
-
-      // find selected answer
-      userAnswer = (answerContainers[i].querySelector('input[name=question' + i + ']:checked') || {}).value;
-
-      // if answer is correct
-      if (userAnswer === questions[i].correctAnswer) {
-        // add to the number of correct answers
-        numCorrect++;
-
-        // color the answers green
-        answerContainers[i].style.color = 'lightgreen';
-      }
-      // if answer is wrong or blank
-      else {
-        // color the answers red
-        answerContainers[i].style.color = 'red';
-      }
-    }
-
-    // show number of correct answers out of total
-    resultsContainer.innerHTML = numCorrect + ' out of ' + questions.length;
-  }
-
+  //     // add this question and its answers to the output
+  //     output.push(
+  //       '<div class="question">' + questions[i].question + '</div>'
+  //       + '<div class="answers">' + answers.join('') + '</div>'
+  //     );
+  //   }
+  //   // finally combine our output list into one string of html and put it on the page
+  // .innerHTML = output.join('');
+  // }
   // show questions right away
-  showQuestions(questions, quizContainer);
-
+  // showQuestions(questions, quizContainer);
   // on submit, show results
-  submitButton.onclick = function () {
-    showResults(questions, quizContainer, resultsContainer);
-  }
-  document.getElementById('timer').innerHTML =
-    003 + ":" + 20;
-  startTimer();
+  var startSection=document.getElementById('startScreen')
+  startSection.classList.add("hidden")
+  var questionSection=document.getElementById('questions')
+  questionSection.classList.remove("hidden")
+  document.getElementById('timer').innerHTML = time
 
-  function startTimer() {
-    var presentTime = document.getElementById('timer').innerHTML;
-    var timeArray = presentTime.split(/[:]+/);
-    var m = timeArray[0];
-    var s = checkSecond((timeArray[1] - 1));
-    if (s == 59) { m = m - 1 }
-    //if(m<0){alert('timer completed')}
-
-    document.getElementById('timer').innerHTML =
-      m + ":" + s;
-    console.log(m)
-    setTimeout(startTimer, 1000);
-  }
-
-  function checkSecond(sec) {
-    if (sec < 10 && sec >= 0) { sec = "0" + sec }; // add zero in front of numbers < 10
-    if (sec < 0) { sec = "59" };
-    return sec;
-  }
-
+  timer=setInterval(startTimer, 1000); 
+  showQuestions()
 }
+  function showQuestions() {
+    var question = document.getElementById('question')
+    var choices = document.getElementById('choices')
+    var current = myQuestions[currentQ]
+    var answers = current.answers
+    // question.innerHTML = ""
+    choices.innerHTML = ""
+    question.textContent = current.question
+    for(var key in answers) {
+      var btn = document.createElement('button')
+      btn.textContent = answers[key]
+      btn.onclick = function(){
+        checkAnswer(key)
+      }
+      choices.appendChild(btn)
+    }
+  }
+  function checkAnswer(key) {
+    var current = myQuestions[currentQ]
+    var correct = current.correctAnswer
+    if (key !== correct){
+      time = time-10
+      document.getElementById('timer').innerHTML = time;
+    }
+    currentQ = currentQ+1
+    if (currentQ === myQuestions.length){
+      gameOver()
+    }
+    else {
+      showQuestions()
+    }
+  }
+  function startTimer() {
+    time--;
+    document.getElementById('timer').innerHTML = time;
+    if (time <=0){
+      time=0;
+      document.getElementById('timer').innerHTML = time;
+      gameOver()
+    }
+    
+  }
+
+  function gameOver() {
+    console.log("game over")
+      clearInterval(timer)
+      var questionSection=document.getElementById('questions')
+  questionSection.classList.add("hidden")
+  var endSection=document.getElementById('endscreen')
+  endSection.classList.remove("hidden")
+  document.getElementById('results').textContent = time
+  }
+  function showScore(){
+    var initials = document.getElementById('initials').value
+    console.log(initials)
+  }
+document.getElementById("submit").onclick = generateQuiz
+document.getElementById("submitInit").onclick = showScore
