@@ -1,47 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>ACGcodeQuiz</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python Code Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #f0f0f0;
+      padding: 20px;
+    }
+    .quiz-container {
+      max-width: 700px;
+      margin: auto;
+      background: #222;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .question {
+      margin: 20px 0;
+    }
+    .answers button {
+      display: block;
+      background: #333;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .answers button:hover {
+      background: #444;
+    }
+    #result {
+      text-align: center;
+      font-size: 20px;
+      margin-top: 20px;
+    }
+    #restartBtn {
+      display: none;
+      margin: 20px auto;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+  </style>
 </head>
-
 <body>
+<a href="./answer-key.html" target="_blank">📘 View Answer Key</a>
+  <div class="quiz-container">
+    <h1>Python Code Quiz</h1>
+    <div id="quiz"></div>
+    <div id="result"></div>
+    <button id="restartBtn" onclick="restartQuiz()">Restart Quiz</button>
+  </div>
 
-    <a href="HighScores.html">View Highscores</a>
+  <script>
+    const questions = [
+      {
+        question: "What does the 'len()' function do in Python?",
+        answers: ["Returns the length of an object", "Calculates a number", "Counts spaces in a string", "None of the above"],
+        correct: 0
+      },
+      {
+        question: "Which keyword is used to define a function in Python?",
+        answers: ["func", "define", "def", "function"],
+        correct: 2
+      },
+      {
+        question: "What data type is the result of: 3 / 2?",
+        answers: ["int", "float", "bool", "str"],
+        correct: 1
+      },
+      {
+        question: "How do you write a comment in Python?",
+        answers: ["// this is a comment", "# this is a comment", "/* comment */", "-- comment"],
+        correct: 1
+      },
+      {
+        question: "Which of the following is a Python tuple?",
+        answers: ["[1, 2, 3]", "{1, 2, 3}", "(1, 2, 3)", "<1, 2, 3>"],
+        correct: 2
+      },
+      {
+        question: "What is the output of: 'Hello' + 'World'?",
+        answers: ["Hello World", "HelloWorld", "Error", "None"],
+        correct: 1
+      },
+      {
+        question: "What does the 'range(5)' produce?",
+        answers: ["[0, 1, 2, 3, 4]", "[1, 2, 3, 4, 5]", "[0, 5]", "Error"],
+        correct: 0
+      },
+      {
+        question: "Which is the correct way to start a while loop?",
+        answers: ["while x > 0 {", "while (x > 0):", "while x > 0:", "loop while x > 0:"],
+        correct: 2
+      },
+      {
+        question: "Which module is used to work with regular expressions in Python?",
+        answers: ["regex", "pyregex", "re", "match"],
+        correct: 2
+      },
+      {
+        question: "What is the output of: bool('False')?",
+        answers: ["True", "False", "None", "Error"],
+        correct: 0
+      }
+    ];
 
-    <div id="wrapper">
+    let current = 0;
+    let score = 0;
 
-        <div id="currentTime"></div>
-        <div><span id="timer"></span></div>
-        <div id= "startScreen">
-            <h1>Anthony Gannuscio</h1>
-            <h6>a quiz about me</h6>
-            <p>Try to answer the following questions within the time limit. Keep in mind that incorrect
-                answers
-                will penalize your score/time by ten seconds!</p>
-                <button id="submit">Start Quiz</button>
-            
-        </div>
-        <div id="questions"class="hidden">
-            <h3 id="question"></h3>
-            <ul id="choices"></ul>
-            
-            
-        </div>
-        <div id="endscreen"class="hidden">
-            <h1>game over</h1>
-            <div id="results"></div>
-            <p>enter initials: 
-                <input id="initials" type="text"/>
-                <button id="submitInit">submit</button>
-            </p>
-        </div>
-    </div>
+    function showQuestion() {
+      const quizDiv = document.getElementById('quiz');
+      quizDiv.innerHTML = '';
 
-    <script src="script.js"></script>
+      if (current < questions.length) {
+        const q = questions[current];
+        const qEl = document.createElement('div');
+        qEl.className = 'question';
+        qEl.innerHTML = `<h3>Q${current + 1}: ${q.question}</h3>`;
+
+        const ansDiv = document.createElement('div');
+        ansDiv.className = 'answers';
+
+        q.answers.forEach((a, i) => {
+          const btn = document.createElement('button');
+          btn.innerText = a;
+          btn.onclick = () => checkAnswer(i);
+          ansDiv.appendChild(btn);
+        });
+
+        quizDiv.appendChild(qEl);
+        quizDiv.appendChild(ansDiv);
+      } else {
+        document.getElementById('result').innerText = `You scored ${score} out of ${questions.length}!`;
+        document.getElementById('restartBtn').style.display = 'block';
+      }
+    }
+
+    function checkAnswer(i) {
+      if (i === questions[current].correct) score++;
+      current++;
+      showQuestion();
+    }
+
+    function restartQuiz() {
+      current = 0;
+      score = 0;
+      document.getElementById('result').innerText = '';
+      document.getElementById('restartBtn').style.display = 'none';
+      showQuestion();
+    }
+
+    showQuestion();
+  </script>
 </body>
-
 </html>
