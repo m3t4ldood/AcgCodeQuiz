@@ -1,164 +1,201 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Python Code Quiz</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ACG Day Planner</title>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet" />
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #111;
-      color: #f0f0f0;
-      padding: 20px;
+      background-color: #030336;
+      color: #b9b9b9;
+      font-family: 'Open Sans', sans-serif;
+      padding-bottom: 40px;
+      margin: 0;
     }
-    .quiz-container {
-      max-width: 700px;
-      margin: auto;
-      background: #222;
-      padding: 20px;
-      border-radius: 10px;
-    }
-    h1 {
+
+    header.jumbotron {
+      background-color: #050548;
+      color: #f1f1f1;
       text-align: center;
+      padding: 2rem 1rem;
+      border-bottom: 2px solid #00ffff33;
+      box-shadow: 0 0 10px #00ffff55;
+      margin-bottom: 20px;
     }
-    .question {
-      margin: 20px 0;
+
+    #datetime {
+      color: #00ffff;
+      font-weight: bold;
     }
-    .answers button {
-      display: block;
-      background: #333;
-      color: #fff;
-      border: none;
-      padding: 10px;
-      margin: 5px 0;
+
+    .day-buttons {
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .day-buttons button {
+      background-color: #1a1a3c;
+      color: #00ffff;
+      border: 1px solid #00ffff55;
+      padding: 8px 16px;
+      font-size: 0.9rem;
       border-radius: 5px;
       cursor: pointer;
+      transition: all 0.3s ease;
     }
-    .answers button:hover {
-      background: #444;
+
+    .day-buttons button.active {
+      background-color: #00ffff55;
+      color: #fff;
+      border-color: #00ffff;
     }
-    #result {
+
+    .day-buttons button:hover {
+      background-color: #00ffff33;
+      color: #ffffff;
+    }
+
+    .time-slot {
+      display: flex;
+      align-items: center;
+      margin: 10px 20px;
+      background-color: #1a1a3c;
+      border-left: 5px solid #00ffff99;
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 0 6px #00ffff22;
+    }
+
+    .time {
+      flex: 0 0 120px;
+      color: #ffffff;
+      font-weight: bold;
       text-align: center;
-      font-size: 20px;
-      margin-top: 20px;
     }
-    #restartBtn {
-      display: none;
-      margin: 20px auto;
-      padding: 10px 20px;
-      font-size: 16px;
+
+    textarea.content {
+      flex: 1;
+      background-color: #2c2c5a;
+      border: none;
+      color: #ffffff;
+      padding: 10px;
+      border-radius: 5px;
+      resize: none;
+      font-size: 1rem;
+      height: 50px;
+      font-family: 'Open Sans', sans-serif;
+    }
+
+    .saveBtn {
+      flex: 0 0 50px;
+      margin-left: 10px;
+      color: #00ffff;
+      cursor: pointer;
+      text-align: center;
+      font-size: 1.3rem;
+      transition: color 0.3s ease, background-color 0.3s ease;
+      user-select: none;
+      padding: 8px 0;
+      border-radius: 5px;
+    }
+
+    .saveBtn:hover {
+      color: #ffffff;
+      background-color: #00ffff33;
     }
   </style>
 </head>
 <body>
-<a href="./answer-key.html" target="_blank">📘 View Answer Key</a>
-  <div class="quiz-container">
-    <h1>Python Code Quiz</h1>
-    <div id="quiz"></div>
-    <div id="result"></div>
-    <button id="restartBtn" onclick="restartQuiz()">Restart Quiz</button>
-  </div>
+  <header class="jumbotron">
+    <h1 class="display-3">Work Day Scheduler</h1>
+    <p>A simple day planner app</p>
+    <p>Date/Time: <span id="datetime"></span></p>
+    <div class="day-buttons">
+      <button data-day="Sunday">Sunday</button>
+      <button data-day="Monday">Monday</button>
+      <button data-day="Tuesday">Tuesday</button>
+      <button data-day="Wednesday">Wednesday</button>
+      <button data-day="Thursday">Thursday</button>
+      <button data-day="Friday">Friday</button>
+      <button data-day="Saturday">Saturday</button>
+    </div>
+  </header>
 
+  <div id="plannerContainer"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script>
-    const questions = [
-      {
-        question: "What does the 'len()' function do in Python?",
-        answers: ["Returns the length of an object", "Calculates a number", "Counts spaces in a string", "None of the above"],
-        correct: 0
-      },
-      {
-        question: "Which keyword is used to define a function in Python?",
-        answers: ["func", "define", "def", "function"],
-        correct: 2
-      },
-      {
-        question: "What data type is the result of: 3 / 2?",
-        answers: ["int", "float", "bool", "str"],
-        correct: 1
-      },
-      {
-        question: "How do you write a comment in Python?",
-        answers: ["// this is a comment", "# this is a comment", "/* comment */", "-- comment"],
-        correct: 1
-      },
-      {
-        question: "Which of the following is a Python tuple?",
-        answers: ["[1, 2, 3]", "{1, 2, 3}", "(1, 2, 3)", "<1, 2, 3>"],
-        correct: 2
-      },
-      {
-        question: "What is the output of: 'Hello' + 'World'?",
-        answers: ["Hello World", "HelloWorld", "Error", "None"],
-        correct: 1
-      },
-      {
-        question: "What does the 'range(5)' produce?",
-        answers: ["[0, 1, 2, 3, 4]", "[1, 2, 3, 4, 5]", "[0, 5]", "Error"],
-        correct: 0
-      },
-      {
-        question: "Which is the correct way to start a while loop?",
-        answers: ["while x > 0 {", "while (x > 0):", "while x > 0:", "loop while x > 0:"],
-        correct: 2
-      },
-      {
-        question: "Which module is used to work with regular expressions in Python?",
-        answers: ["regex", "pyregex", "re", "match"],
-        correct: 2
-      },
-      {
-        question: "What is the output of: bool('False')?",
-        answers: ["True", "False", "None", "Error"],
-        correct: 0
-      }
-    ];
+    const startHour = 3;
+    const endHour = 22;
+    let currentDay = null;
 
-    let current = 0;
-    let score = 0;
+    function updateDateTime() {
+      const now = new Date();
+      document.getElementById('datetime').textContent = now.toLocaleString();
+    }
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
 
-    function showQuestion() {
-      const quizDiv = document.getElementById('quiz');
-      quizDiv.innerHTML = '';
+    function renderPlanner(day) {
+      const container = document.getElementById('plannerContainer');
+      container.innerHTML = '';
 
-      if (current < questions.length) {
-        const q = questions[current];
-        const qEl = document.createElement('div');
-        qEl.className = 'question';
-        qEl.innerHTML = `<h3>Q${current + 1}: ${q.question}</h3>`;
+      for (let h = startHour; h <= endHour; h++) {
+        const isPM = h >= 12;
+        const hour12 = h % 12 === 0 ? 12 : h % 12;
+        const suffix = isPM ? 'PM' : 'AM';
+        const timeLabel = `${hour12}:00 ${suffix}`;
+        const timeId = `${hour12}${suffix.toLowerCase()}`;
 
-        const ansDiv = document.createElement('div');
-        ansDiv.className = 'answers';
+        const fullKey = `${day}_${timeId}`;
+        const savedValue = localStorage.getItem(fullKey) || '';
 
-        q.answers.forEach((a, i) => {
-          const btn = document.createElement('button');
-          btn.innerText = a;
-          btn.onclick = () => checkAnswer(i);
-          ansDiv.appendChild(btn);
-        });
+        const slot = document.createElement('div');
+        slot.className = 'time-slot';
 
-        quizDiv.appendChild(qEl);
-        quizDiv.appendChild(ansDiv);
-      } else {
-        document.getElementById('result').innerText = `You scored ${score} out of ${questions.length}!`;
-        document.getElementById('restartBtn').style.display = 'block';
+        const timeDiv = document.createElement('div');
+        timeDiv.className = 'time';
+        timeDiv.textContent = timeLabel;
+
+        const textarea = document.createElement('textarea');
+        textarea.className = 'content';
+        textarea.id = fullKey;
+        textarea.value = savedValue;
+
+        const saveBtn = document.createElement('div');
+        saveBtn.className = 'saveBtn';
+        saveBtn.innerHTML = '<i class="fas fa-save"></i>';
+        saveBtn.onclick = function () {
+          localStorage.setItem(fullKey, textarea.value);
+          saveBtn.style.opacity = '0.6';
+          setTimeout(() => saveBtn.style.opacity = '1', 200);
+        };
+
+        slot.appendChild(timeDiv);
+        slot.appendChild(textarea);
+        slot.appendChild(saveBtn);
+        container.appendChild(slot);
       }
     }
 
-    function checkAnswer(i) {
-      if (i === questions[current].correct) score++;
-      current++;
-      showQuestion();
-    }
+    document.querySelectorAll('.day-buttons button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.day-buttons button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentDay = btn.getAttribute('data-day');
+        renderPlanner(currentDay);
+      });
+    });
 
-    function restartQuiz() {
-      current = 0;
-      score = 0;
-      document.getElementById('result').innerText = '';
-      document.getElementById('restartBtn').style.display = 'none';
-      showQuestion();
-    }
-
-    showQuestion();
+    // Default to today
+    const todayIndex = new Date().getDay();
+    const todayButton = document.querySelectorAll('.day-buttons button')[todayIndex];
+    todayButton.click();
   </script>
 </body>
 </html>
